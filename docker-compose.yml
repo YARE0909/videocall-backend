@@ -1,16 +1,9 @@
-version: '3.8'
 services:
   db:
-    image: postgres:14
-    restart: always
-    environment:
-      POSTGRES_USER: nestuser
-      POSTGRES_PASSWORD: nestpass
-      POSTGRES_DB: nestdb
+    image: postgres:15
     ports:
-      - '5432:5432'
-    volumes:
-      - db-data:/var/lib/postgresql/data
-
-volumes:
-  db-data:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: mydb
