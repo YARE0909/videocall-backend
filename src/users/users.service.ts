@@ -2,18 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ChatGateway } from 'src/chat/chat.gateway';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly chatGateway: ChatGateway,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateUserDto) {
     const user = await this.prisma.user.create({ data: dto });
-    this.chatGateway.emitUserCreated(user);
     return user;
   }
 

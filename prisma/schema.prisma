@@ -8,8 +8,50 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String               @id @default(uuid())
+  email     String               @unique
   name      String?
-  createdAt DateTime @default(now())
+  password  String?
+  createdAt DateTime             @default(now())
+  meetings  MeetingParticipant[] @relation("UserMeetings") // Updated relation name
+  hosted    Meeting[]            @relation("Host")
+}
+
+model Meeting {
+  id           String               @id @default(uuid())
+  code         String               @unique
+  title        String?
+  createdAt    DateTime             @default(now())
+  status       MeetingStatus        @default(ACTIVE)
+  hostId       String
+  host         User                 @relation("Host", fields: [hostId], references: [id])
+  participants MeetingParticipant[] // Relation to MeetingParticipant
+
+  // Additional statistics fields
+  participantCount Int @default(0) // Count of participants in the meeting
+  duration         Int @default(0) // Meeting duration (in seconds)
+}
+
+model MeetingParticipant {
+  id        String            @id @default(uuid())
+  userId    String
+  meetingId String
+  status    ParticipantStatus
+  joinedAt  DateTime          @default(now())
+  leftAt    DateTime?
+
+  user    User    @relation("UserMeetings", fields: [userId], references: [id]) // Updated relation name
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+
+  @@unique([userId, meetingId]) // Ensure a user can only be associated with one meeting at a time
+}
+
+enum MeetingStatus {
+  ACTIVE
+  ENDED
+}
+
+enum ParticipantStatus {
+  JOINED
+  LEFT
 }

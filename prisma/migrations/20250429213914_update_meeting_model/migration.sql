@@ -1,0 +1,8 @@
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('PENDING', 'ACTIVE', 'ENDED');
+
+-- AlterTable
+ALTER TABLE "Meeting" ADD COLUMN     "endTime" TIMESTAMP(3),
+ADD COLUMN     "participantCount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "startTime" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "status" "Status" NOT NULL DEFAULT 'PENDING';
